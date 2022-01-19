@@ -73,12 +73,21 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (movingInput.x != 0 || movingInput.y != 0)
+
+        movingDirection.x = movingInput.x;
+        movingDirection.z = movingInput.y;
+
+        if (characterController.isGrounded)
         {
-            movingDirection.x = movingInput.x;
-            movingDirection.z = movingInput.y;
-            characterController.Move(movingDirection * 10f * Time.deltaTime);
+            movingDirection.y = -0.01f;
         }
+        else
+        {
+            movingDirection.y = -9.8f;
+        }
+
+        characterController.Move(movingDirection * 10f * Time.deltaTime);
+
 
         charModel.transform.rotation = Quaternion.Slerp(charModel.transform.rotation, lookDirection, 10f * Time.deltaTime);
 
