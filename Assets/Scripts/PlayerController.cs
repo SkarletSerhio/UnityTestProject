@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
             movingDirection.y = -9.8f;
         }
 
-        characterController.Move(movingDirection * 10f * Time.deltaTime);
+        characterController.Move(10f * Time.deltaTime * movingDirection);
 
 
         charModel.transform.rotation = Quaternion.Slerp(charModel.transform.rotation, lookDirection, 10f * Time.deltaTime);
