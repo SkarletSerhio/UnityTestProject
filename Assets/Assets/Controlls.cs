@@ -53,6 +53,15 @@ public partial class @Controlls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""82d8b3d0-4a6d-4fc5-a976-01a3d6f83ce0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -143,6 +152,28 @@ public partial class @Controlls : IInputActionCollection2, IDisposable
                     ""action"": ""LookAtPos"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dc6b9093-50c9-4a42-8636-1db4cf0d7eaa"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dea8d394-7545-4931-9f39-51767c33aa31"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -154,6 +185,7 @@ public partial class @Controlls : IInputActionCollection2, IDisposable
         m_Character_Moving = m_Character.FindAction("Moving", throwIfNotFound: true);
         m_Character_Rotation = m_Character.FindAction("Rotation", throwIfNotFound: true);
         m_Character_LookAtPos = m_Character.FindAction("LookAtPos", throwIfNotFound: true);
+        m_Character_Attack = m_Character.FindAction("Attack", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -216,6 +248,7 @@ public partial class @Controlls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Character_Moving;
     private readonly InputAction m_Character_Rotation;
     private readonly InputAction m_Character_LookAtPos;
+    private readonly InputAction m_Character_Attack;
     public struct CharacterActions
     {
         private @Controlls m_Wrapper;
@@ -223,6 +256,7 @@ public partial class @Controlls : IInputActionCollection2, IDisposable
         public InputAction @Moving => m_Wrapper.m_Character_Moving;
         public InputAction @Rotation => m_Wrapper.m_Character_Rotation;
         public InputAction @LookAtPos => m_Wrapper.m_Character_LookAtPos;
+        public InputAction @Attack => m_Wrapper.m_Character_Attack;
         public InputActionMap Get() { return m_Wrapper.m_Character; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -241,6 +275,9 @@ public partial class @Controlls : IInputActionCollection2, IDisposable
                 @LookAtPos.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnLookAtPos;
                 @LookAtPos.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnLookAtPos;
                 @LookAtPos.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnLookAtPos;
+                @Attack.started -= m_Wrapper.m_CharacterActionsCallbackInterface.OnAttack;
+                @Attack.performed -= m_Wrapper.m_CharacterActionsCallbackInterface.OnAttack;
+                @Attack.canceled -= m_Wrapper.m_CharacterActionsCallbackInterface.OnAttack;
             }
             m_Wrapper.m_CharacterActionsCallbackInterface = instance;
             if (instance != null)
@@ -254,6 +291,9 @@ public partial class @Controlls : IInputActionCollection2, IDisposable
                 @LookAtPos.started += instance.OnLookAtPos;
                 @LookAtPos.performed += instance.OnLookAtPos;
                 @LookAtPos.canceled += instance.OnLookAtPos;
+                @Attack.started += instance.OnAttack;
+                @Attack.performed += instance.OnAttack;
+                @Attack.canceled += instance.OnAttack;
             }
         }
     }
@@ -263,5 +303,6 @@ public partial class @Controlls : IInputActionCollection2, IDisposable
         void OnMoving(InputAction.CallbackContext context);
         void OnRotation(InputAction.CallbackContext context);
         void OnLookAtPos(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
     }
 }

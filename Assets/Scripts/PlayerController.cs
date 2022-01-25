@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour
     Quaternion cameraLookDirection;
     Vector3 cameraOffsetPosition;
 
+    bool isAttacking;
+
     [SerializeField]float cameraHeight;
     [SerializeField]float cameraOffset;
 
@@ -40,6 +42,9 @@ public class PlayerController : MonoBehaviour
         controlls.Character.LookAtPos.performed += onLooking;
         //Subscribe on rotation
         controlls.Character.Rotation.performed += onRotation;
+        //Subscribe on attack
+        controlls.Character.Attack.performed += onAttack;
+        controlls.Character.Attack.canceled += onAttack;
 
         cameraOffsetPosition = new Vector3(0f, cameraHeight, cameraOffset);
     }
@@ -71,6 +76,11 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    void onAttack(InputAction.CallbackContext context)
+    {
+        isAttacking = context.ReadValueAsButton();
+    }
+
     private void Update()
     {
 
@@ -86,12 +96,16 @@ public class PlayerController : MonoBehaviour
             movingDirection.y = -9.8f;
         }
 
+        if (isAttacking)
+        {
+            //Debug.Log("Ratatatat!");
+        }
+
         characterController.Move(10f * Time.deltaTime * movingDirection);
 
 
         charModel.transform.rotation = Quaternion.Slerp(charModel.transform.rotation, lookDirection, 10f * Time.deltaTime);
 
-        //cameraOffsetPosition = new Vector3(0f, cameraHeight, cameraOffset);
         CameraMovement();
 
     }
@@ -111,11 +125,13 @@ public class PlayerController : MonoBehaviour
         controlls.Character.Moving.Enable();
         controlls.Character.Rotation.Enable();
         controlls.Character.LookAtPos.Enable();
+        controlls.Character.Attack.Enable();
     }
     private void OnDisable()
     {
         controlls.Character.Moving.Disable();
         controlls.Character.Rotation.Disable();
         controlls.Character.LookAtPos.Disable();
+        controlls.Character.Attack.Disable();
     }
 }
