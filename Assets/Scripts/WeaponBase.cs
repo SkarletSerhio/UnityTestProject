@@ -5,10 +5,11 @@ using UnityEngine;
 
 public abstract class WeaponBase : MonoBehaviour
 {
-    Controlls controlls;
 
     public float Damage, Range, BulletSpeed, ShootDelay;
-    [SerializeField]public GameObject WeaponModel, Bullet, BulletSpawner;
+    [SerializeField]public GameObject Bullet, BulletSpawner;
+
+    float timePass = 0f;
 
     private void Awake()
     {
@@ -17,10 +18,14 @@ public abstract class WeaponBase : MonoBehaviour
     
     public virtual void Shoot()
     {
-        GameObject bulletInstance = Instantiate<GameObject>(Bullet, BulletSpawner.transform.position, BulletSpawner.transform.rotation);
-        bulletInstance.GetComponent<BulletBase>().BulletSpawn(BulletSpeed);
-        Destroy(bulletInstance, Range);
-
+        if (Time.time >= timePass)
+        {
+            GameObject bulletInstance = Instantiate<GameObject>(Bullet, BulletSpawner.transform.position, BulletSpawner.transform.rotation);
+            bulletInstance.GetComponent<BulletBase>().BulletSpawn(BulletSpeed);
+            Destroy(bulletInstance, Range/10);
+            timePass = Time.time + ShootDelay/20;
+        } 
+        
     }
 
 }

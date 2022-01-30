@@ -26,6 +26,9 @@ public class PlayerController : MonoBehaviour
     Vector3 cameraOffsetPosition;
 
     bool isAttacking;
+    WeaponBase weapon;
+
+    CharacterBase characterStats;
 
     [SerializeField]float cameraHeight;
     [SerializeField]float cameraOffset;
@@ -45,6 +48,9 @@ public class PlayerController : MonoBehaviour
         //Subscribe on attack
         controlls.Character.Attack.performed += onAttack;
         controlls.Character.Attack.canceled += onAttack;
+
+        weapon = GetComponentInChildren<WeaponBase>();
+        characterStats = GetComponent<CharacterBase>();
 
         cameraOffsetPosition = new Vector3(0f, cameraHeight, cameraOffset);
     }
@@ -96,18 +102,21 @@ public class PlayerController : MonoBehaviour
             movingDirection.y = -9.8f;
         }
 
-        if (isAttacking)
-        {
-            //Debug.Log("Ratatatat!");
-        }
-
-        characterController.Move(10f * Time.deltaTime * movingDirection);
+        characterController.Move(characterStats.MovementSpeed * Time.deltaTime * movingDirection);
 
 
-        charModel.transform.rotation = Quaternion.Slerp(charModel.transform.rotation, lookDirection, 10f * Time.deltaTime);
+        charModel.transform.rotation = Quaternion.Slerp(charModel.transform.rotation, lookDirection, characterStats.RotationSpeed * Time.deltaTime);
 
         CameraMovement();
+        Shooting();
+    }
 
+    void Shooting()
+    {
+        if (isAttacking)
+        {
+            weapon.Shoot();
+        }
     }
 
     void CameraMovement()
@@ -117,7 +126,6 @@ public class PlayerController : MonoBehaviour
         cam.transform.rotation = Quaternion.Slerp(cam.transform.rotation, cameraLookDirection, 10f * Time.deltaTime);
 
         cam.transform.position = Vector3.Slerp(cam.transform.position, charModel.transform.position + cameraOffsetPosition, 15f * Time.deltaTime);
-
     }
 
     private void OnEnable()
